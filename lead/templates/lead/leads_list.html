@@ -1,0 +1,60 @@
+{% extends 'core/base.html' %}
+{% block title %}Leads{% endblock %}
+
+{% block content %}
+<div class="border border-gray-200 shadow p-2">
+    <div
+        class="flex justify-between items-center border-b border-gray-200 pb-2">
+        <h1 class="text-4xl font-bold">Leads</h1>
+        <a href="{% url 'add_lead' %}"
+            class="block bg-green-500 text-white rounded-lg py-1 px-3 font-bold">Add
+            lead
+        </a>
+    </div>
+
+    <div class="relative overflow-x-auto mt-8">
+        <table
+            class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+            <thead
+                class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                <tr>
+                    <th scope="col" class="px-6 py-3">Name</th>
+                    <th scope="col" class="px-6 py-3">Email</th>
+                    <th scope="col" class="px-6 py-3">Priority</th>
+                    <th scope="col" class="px-6 py-3">Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for lead in leads %}
+                <tr
+                    class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                    <th scope="row"
+                        class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                        <a href="{% url 'leads_detail' lead.id %}">
+                            {{ lead.name }}
+                        </a>
+                    </th>
+                    <td class="px-6 py-4">
+                        {{ lead.email }}
+                    </td>
+                    <td class="px-6 py-4">
+                        {{ lead.get_priority_display }}
+                    </td>
+                    <td class="px-6 py-4">
+                        <span
+                            class="font-semibold {% if lead.status == 'new' %}text-red-500{% elif lead.status == 'contacted' %}text-blue-500{% elif lead.status == 'won' %}text-green-500{% elif lead.status == 'lost' %}text-gray-500{% else %}text-black{% endif %}">
+                            {{ lead.get_status_display }}
+                        </span>
+                    </td>
+                </tr>
+                {% empty %}
+                <p class="text-center opacity-70 font-semibold mb-10">There are
+                    not leads in
+                    the
+                    database.</p>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
