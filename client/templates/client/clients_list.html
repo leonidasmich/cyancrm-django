@@ -1,0 +1,49 @@
+{% extends 'core/base.html' %}
+{% block title %}Clients{% endblock %}
+
+{% block content %}
+<div class="border border-gray-200 shadow p-2">
+    <div
+        class="flex justify-between items-center border-b border-gray-200 pb-2">
+        <h1 class="text-4xl font-bold">Clients</h1>
+        <a href="{% url 'clients_add' %}"
+            class="block bg-green-500 text-white rounded-lg py-1 px-3 font-bold">Add
+            Client
+        </a>
+    </div>
+
+    <div class="relative overflow-x-auto mt-8">
+        <table
+            class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+            <thead
+                class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                <tr>
+                    <th scope="col" class="px-6 py-3">Name</th>
+                    <th scope="col" class="px-6 py-3">Email</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for client in clients %}
+                <tr
+                    class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                    <th scope="row"
+                        class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                        <a href="{% url 'clients_detail' client.id %}">
+                            {{ client.name }}
+                        </a>
+                    </th>
+                    <td class="px-6 py-4">
+                        {{ client.email }}
+                    </td>
+                </tr>
+                {% empty %}
+                <p class="text-center opacity-70 font-semibold mb-10">There are
+                    no clients in
+                    the
+                    database.</p>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
