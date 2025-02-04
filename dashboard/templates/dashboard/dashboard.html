@@ -6,6 +6,29 @@
 <div class="max-w-7xl mx-auto mt-14">
     <h1 class="text-3xl font-bold text-gray-800 mb-6">Dashboard</h1>
 
+    <div class="flex justify-between items-center">
+        <!-- Conversion Rate -->
+        <div class="mb-8">
+            <h2 class="text-xl font-semibold text-gray-700 mb-4">Lead
+                Conversion</h2>
+            <div class="bg-white shadow-md rounded-xl p-6"
+                style="width: 450px; height: 450px">
+                <!-- Canvas element for the doughnut chart -->
+                <canvas id="conversionChart" width="100" height="100"></canvas>
+            </div>
+        </div>
+
+        <!-- Leads by Status Chart -->
+        <div class="mb-8">
+            <h2 class="text-xl font-semibold text-gray-700 mb-4">Leads by
+                Status</h2>
+            <div class="bg-white shadow-md rounded-xl p-6"
+                style="width: 450px; height: 450px">
+                <canvas id="statusChart" width="400" height="400"></canvas>
+            </div>
+        </div>
+    </div>
+
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         <!-- Leads Section -->
         <div class="bg-white shadow-md rounded-xl p-6">
@@ -59,5 +82,86 @@
         </div>
     </div>
 </div>
+
+<script>
+// Conversion Chart
+const totalClients = {{ total_clients }};
+const totalLeads = {{ total_leads }};
+const notConverted = totalLeads - totalClients;
+
+const ctxConversion = document.getElementById('conversionChart').getContext('2d');
+const conversionChart = new Chart(ctxConversion, {
+  type: 'doughnut',
+  data: {
+    labels: ['Converted', 'Not Converted'],
+    datasets: [{
+      data: [totalClients, notConverted],
+      backgroundColor: ['#36A2EB', '#FF6384'],
+      borderWidth: 1
+    }]
+  },
+  options: {
+    responsive: true,
+    plugins: {
+      tooltip: {
+        callbacks: {
+          label: function(context) {
+            let label = context.label || '';
+            if (label) {
+              label += ': ';
+            }
+            label += context.parsed + ' leads';
+            return label;
+          }
+        }
+      }
+    }
+  }
+});
+
+// Status Chart - Breakdown of leads by status
+const statusCounts = {
+    new: {{ status_counts.new }},
+    contacted: {{ status_counts.contacted }},
+    won: {{ status_counts.won }},
+    lost: {{ status_counts.lost }}
+};
+
+const ctxStatus = document.getElementById('statusChart').getContext('2d');
+const statusChart = new Chart(ctxStatus, {
+  type: 'bar',
+  data: {
+    labels: ['New', 'Contacted', 'Won', 'Lost'],
+    datasets: [{
+      label: 'Number of Leads',
+      data: [statusCounts.new, statusCounts.contacted, statusCounts.won, statusCounts.lost],
+      backgroundColor: [
+        '#FF6384',
+        '#36A2EB',
+        '#4BC0C0',
+        '#FFCE56'
+      ],
+      borderColor: [
+        '#FF6384',
+        '#36A2EB',
+        '#4BC0C0',
+        '#FFCE56'
+      ],
+      borderWidth: 1
+    }]
+  },
+  options: {
+    scales: {
+      y: {
+        beginAtZero: true,
+        ticks: {
+          precision: 0  // To avoid decimal ticks on integer values
+        }
+      }
+    },
+    responsive: true
+  }
+});    
+</script>
 
 {% endblock %}
