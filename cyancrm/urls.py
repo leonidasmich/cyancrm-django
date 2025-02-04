@@ -10,6 +10,7 @@ urlpatterns = [
     path('dashboard/leads/', include('lead.urls')),
     path('dashboard/clients/', include('client.urls')),
     path('dashboard/myaccount/', myaccount, name='myaccount'),
+    path('dashboard/teams/', include('team.urls')),
     path('dashboard/', include('dashboard.urls')),
     path('sign-up/', signup, name='signup'),
     path('login-in/', views.LoginView.as_view(template_name='userprofile/login.html'), name='login'),
